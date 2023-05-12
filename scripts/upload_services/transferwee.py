@@ -38,6 +38,7 @@ files from a `we.tl' or `wetransfer.com/downloads' URLs and upload files that
 will be shared via emails or link.
 """
 
+
 from typing import List
 import os.path
 import re
@@ -49,9 +50,9 @@ import requests
 
 WETRANSFER_API_URL = 'https://wetransfer.com/api/v4/transfers'
 WETRANSFER_DOWNLOAD_URL = WETRANSFER_API_URL + '/{transfer_id}/download'
-WETRANSFER_UPLOAD_EMAIL_URL = WETRANSFER_API_URL + '/email'
+WETRANSFER_UPLOAD_EMAIL_URL = f'{WETRANSFER_API_URL}/email'
 WETRANSFER_VERIFY_URL = WETRANSFER_API_URL + '/{transfer_id}/verify'
-WETRANSFER_UPLOAD_LINK_URL = WETRANSFER_API_URL + '/link'
+WETRANSFER_UPLOAD_LINK_URL = f'{WETRANSFER_API_URL}/link'
 WETRANSFER_FILES_URL = WETRANSFER_API_URL + '/{transfer_id}/files'
 WETRANSFER_PART_PUT_URL = WETRANSFER_FILES_URL + '/{file_id}/part-put-url'
 WETRANSFER_FINALIZE_MPP_URL = WETRANSFER_FILES_URL + '/{file_id}/finalize-mpp'
@@ -163,10 +164,7 @@ def _prepare_session() -> requests.Session:
     s = requests.Session()
     r = s.get('https://wetransfer.com/')
     m = re.search('name="csrf-token" content="([^"]+)"', r.text)
-    s.headers.update({
-        'x-csrf-token': m.group(1),
-        'x-requested-with': 'XMLHttpRequest',
-    })
+    s.headers.update({'x-csrf-token': m[1], 'x-requested-with': 'XMLHttpRequest'})
 
     return s
 
